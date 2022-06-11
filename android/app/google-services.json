@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "184339080240",
+    "project_id": "airsoft-map-f7785",
+    "storage_bucket": "airsoft-map-f7785.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184339080240:android:ff7218b4d19c520c0f79f5",
+        "android_client_info": {
+          "package_name": "com.denis.airsoft.airsoft_map"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184339080240-5ubdij4v2kp05boip1804at57nr3ur73.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.denis.airsoft.airsoft_map",
+            "certificate_hash": "723ff6ce4da77dd7e73ab61fd8397e19ca84287f"
+          }
+        },
+        {
+          "client_id": "184339080240-a6p8fris2amre2bqpu9vmk11s0pnr8sk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNkLt1eZLvbHkxV2BGWSWfFQLeX7qpMYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184339080240-a6p8fris2amre2bqpu9vmk11s0pnr8sk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
