@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-import 'constants.dart';
-
 class SoldierHomeScreen extends StatefulWidget {
   const SoldierHomeScreen({Key? key}) : super(key: key);
 
@@ -14,6 +12,7 @@ class SoldierHomeScreen extends StatefulWidget {
 class _SoldierHomeScreenState extends State<SoldierHomeScreen> {
   final _formKey = GlobalKey<FormState>();
   var joiningCodeController = TextEditingController();
+  var nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +136,7 @@ class _SoldierHomeScreenState extends State<SoldierHomeScreen> {
                     ],
                   ),
                   child: TextFormField(
+                    controller: nameController,
                     validator: (val) =>
                         (!val!.isNotEmpty) ? "Please Enter Your Name" : null,
                     decoration: const InputDecoration(
@@ -155,8 +155,7 @@ class _SoldierHomeScreenState extends State<SoldierHomeScreen> {
                   onTap: () async {
                     if (validateAndSave()) {
                       EasyLoading.show(status: "Loading..");
-                      print(await getDoc(joiningCodeController.text));
-                      bool a = await getDoc(joiningCodeController.text);
+                       bool a = await getDoc(joiningCodeController.text);
                       if (a == true) {
                         int count = -999;
                         var ids = await FirebaseFirestore.instance
@@ -172,6 +171,13 @@ class _SoldierHomeScreenState extends State<SoldierHomeScreen> {
                               .doc(joiningCodeController.text)
                               .update({
                             'playerJoined': count + 1,
+                          });
+                          print("Hello2");
+                          await FirebaseFirestore.instance
+                              .collection("players")
+                              .doc(joiningCodeController.text)
+                              .update({
+                            'player${count+1}': nameController.text,
                           });
                         }
                         print(count);

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:pubg_map/constants.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({Key? key}) : super(key: key);
@@ -126,7 +127,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.9,
-                   padding: const EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -143,8 +144,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       hint: const Text(
                         '  Select time here',
                       ),
-                      onChanged: (time) =>
-                          setState(() => timeOfCircle = time),
+                      onChanged: (time) => setState(() => timeOfCircle = time),
                       validator: (value) =>
                           value == null ? 'field required' : null,
                       items: ['1 min', '2 min', '3 min', '4 min', '5 min']
@@ -181,7 +181,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.9,
-                   padding: const EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -198,8 +198,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       hint: const Text(
                         '  Select time here',
                       ),
-                      onChanged: (game) =>
-                          setState(() => gameType = game),
+                      onChanged: (game) => setState(() => gameType = game),
                       validator: (value) =>
                           value == null ? 'field required' : null,
                       items: ['1v1', '2v2', '4v4']
@@ -219,18 +218,27 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   onTap: () async {
                     if (validateAndSave()) {
                       EasyLoading.show(status: "Loading..");
-                      print("hello");
-                      await FirebaseFirestore.instance
-                          .collection("gameCodes")
-                          .doc(joiningCodeController.text)
-                          .set({
-                        'joiningCode': joiningCodeController.text,
-                        'timeOfCircle': timeOfCircle,
-                        'matchStarted': 0,
-                        'gameType': gameType,
-                        'playerJoined': 0,
-                      });
-                      EasyLoading.showSuccess("Game created successfully!");
+                      bool a = await getDoc(joiningCodeController.text);
+                      if (a == true) {
+                        EasyLoading.showError(
+                            "Joining Code Already Exists. Please choose another joining code");
+                      } else {
+                        EasyLoading.show(status: "Loading..");
+                        print("hello");
+                        await FirebaseFirestore.instance
+                            .collection("gameCodes")
+                            .doc(joiningCodeController.text)
+                            .set({
+                          'joiningCode': joiningCodeController.text,
+                          'timeOfCircle': timeOfCircle,
+                          'matchStarted': 0,
+                          'gameType': gameType,
+                          'playerJoined': 1,
+                        });
+                        EasyLoading.showSuccess("Game created successfully!");
+                        Navigator.pushNamed(context, soldierMapScreenRoute);
+                      }
+                      EasyLoading.dismiss();
                     }
                   },
                   child: Container(
@@ -263,6 +271,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       ),
     );
   }
+
   bool validateAndSave() {
     final form = _formKey.currentState;
     if (form!.validate()) {
@@ -271,5 +280,23 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     } else {
       return false;
     }
+  }
+
+  Future<bool> getDoc(docId) async {
+    bool i = false;
+    var a = await FirebaseFirestore.instance
+        .collection('gameCodes')
+        .doc(docId)
+        .get();
+    print(a);
+    if (a.exists) {
+      print('Exists');
+      i = true;
+    }
+    if (!a.exists) {
+      print('Not exists');
+      i = false;
+    }
+    return i;
   }
 }
