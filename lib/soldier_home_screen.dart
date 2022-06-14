@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:pubg_map/constants.dart';
 
 class SoldierHomeScreen extends StatefulWidget {
   const SoldierHomeScreen({Key? key}) : super(key: key);
@@ -13,6 +14,11 @@ class _SoldierHomeScreenState extends State<SoldierHomeScreen> {
   final _formKey = GlobalKey<FormState>();
   var joiningCodeController = TextEditingController();
   var nameController = TextEditingController();
+  @override
+  void dispose() {
+EasyLoading.dismiss();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,38 +160,39 @@ class _SoldierHomeScreenState extends State<SoldierHomeScreen> {
                 GestureDetector(
                   onTap: () async {
                     if (validateAndSave()) {
-                      EasyLoading.show(status: "Loading..");
-                       bool a = await getDoc(joiningCodeController.text);
-                      if (a == true) {
-                        int count = -999;
-                        var ids = await FirebaseFirestore.instance
-                            .collection("gameCodes")
-                            .doc(joiningCodeController.text)
-                            .get();
-
-                        count = ids["playerJoined"];
-                        if (count != -999) {
-                          print("Hello2");
-                          await FirebaseFirestore.instance
-                              .collection("gameCodes")
-                              .doc(joiningCodeController.text)
-                              .update({
-                            'playerJoined': count + 1,
-                          });
-                          print("Hello2");
-                          await FirebaseFirestore.instance
-                              .collection("players")
-                              .doc(joiningCodeController.text)
-                              .update({
-                            'player${count+1}': nameController.text,
-                          });
-                        }
-                        print(count);
-                        EasyLoading.showSuccess("Game Joined Successfully!");
-                      } else {
-                        EasyLoading.showError("Invalid Joining Code!");
-                        print("Doc don't exist");
-                      }
+                    //   EasyLoading.show(status: "Loading..");
+                    //    bool a = await getDoc(joiningCodeController.text);
+                    //   if (a == true) {
+                    //     int count = -999;
+                    //     var ids = await FirebaseFirestore.instance
+                    //         .collection("gameCodes")
+                    //         .doc(joiningCodeController.text)
+                    //         .get();
+                    //
+                    //     count = ids["playerJoined"];
+                    //     if (count != -999) {
+                    //       print("Hello2");
+                    //       await FirebaseFirestore.instance
+                    //           .collection("gameCodes")
+                    //           .doc(joiningCodeController.text)
+                    //           .update({
+                    //         'playerJoined': count + 1,
+                    //       });
+                    //       print("Hello2");
+                    //       // await FirebaseFirestore.instance
+                    //       //     .collection("players")
+                    //       //     .doc(joiningCodeController.text)
+                    //       //     .set({
+                    //       //   'player${count+1}': nameController.text,
+                    //       // });
+                    //     }
+                    //     print(count);
+                    //     EasyLoading.showSuccess("Game Joined Successfully!");
+                        Navigator.pushNamed(context, soldierMapScreenRoute);
+                      // } else {
+                      //   EasyLoading.showError("Invalid Joining Code!");
+                      //   print("Doc don't exist");
+                      // }
                     }
                   },
                   child: Container(

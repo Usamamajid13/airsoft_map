@@ -16,14 +16,46 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
   int selected = 0;
   var _initialCameraPosition;
   Set<Circle> mCircle = {
-    Circle(
-      strokeWidth: 3,
-      fillColor: Colors.white.withOpacity(0.4),
-      strokeColor: Colors.red,
-      circleId: const CircleId("id1"),
-      center: const LatLng(45.16035546331, 28.824806522288824),
-      radius: 50,
-    ),
+    // Circle(
+    //   strokeWidth: 1,
+    //   fillColor: Colors.white.withOpacity(0.4),
+    //   strokeColor: Colors.white,
+    //   circleId: const CircleId("id1"),
+    //   center: const LatLng(45.1589105131836, 28.825975940519047),
+    //   radius: 150,
+    // ),
+    // Circle(
+    //   strokeWidth: 1,
+    //   fillColor: Colors.white.withOpacity(0.4),
+    //   strokeColor: Colors.white,
+    //   circleId: const CircleId("id2"),
+    //   center: const LatLng(45.15894077462505, 28.82551460059801),
+    //   radius: 100,
+    // ),
+    // Circle(
+    //   strokeWidth: 1,
+    //   fillColor: Colors.white.withOpacity(0.4),
+    //   strokeColor: Colors.white,
+    //   circleId: const CircleId("id3"),
+    //   center: const LatLng(45.159122342936286, 28.825300023890556),
+    //   radius: 60,
+    // ),
+    // Circle(
+    //   strokeWidth: 1,
+    //   fillColor: Colors.white.withOpacity(0.4),
+    //   strokeColor: Colors.white,
+    //   circleId: const CircleId("id4"),
+    //   center: const LatLng(45.159023993506196, 28.82563261778711),
+    //   radius: 30,
+    // ),
+    // Circle(
+    //   strokeWidth: 1,
+    //   fillColor: Colors.white.withOpacity(0.4),
+    //   strokeColor: Colors.white,
+    //   circleId: const CircleId("id4"),
+    //   center: const LatLng(45.15918002858243, 28.82555751593829),
+    //   radius: 3,
+    // ),
   };
 
   initialCameraPosition() {
@@ -48,27 +80,118 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
   Position? position;
   LocationPermission? permission;
   Timer? timer;
+  int radiusDeduct = 0;
 
   getPosition() async {
     permission = await Geolocator.requestPermission();
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     initialCameraPosition();
-    timer = Timer.periodic(const Duration(milliseconds: 100), (mil) {
-      if(mil.tick < 200)
-        {
+    mCircle.add(
+      Circle(
+        strokeWidth: 1,
+        fillColor: Colors.white.withOpacity(0.4),
+        strokeColor: Colors.black,
+        circleId: const CircleId("id1"),
+        center: const LatLng(45.15894077462505, 28.82551460059801),
+        radius: 150.0,
+      ),
+    );
+    Timer(Duration(minutes: 5), () {
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (radiusDeduct < 50) {
           mCircle.add(
             Circle(
-              strokeWidth: 3,
+              strokeWidth: 1,
               fillColor: Colors.white.withOpacity(0.4),
-              strokeColor: Colors.blue,
+              strokeColor: Colors.red,
               circleId: const CircleId("id1"),
-              center: const LatLng(45.16035546331, 28.824806522288824),
-              radius: 300.0 - mil.tick,
+              center: const LatLng(45.15894077462505, 28.82551460059801),
+              radius: 150.0 - radiusDeduct,
             ),
           );
+          setState(() {});
+          radiusDeduct++;
+          print(radiusDeduct);
+          if (radiusDeduct >= 50) {
+            mCircle.add(
+              const Circle(
+                strokeWidth: 1,
+                strokeColor: Colors.black,
+                circleId: CircleId("id9"),
+                center: LatLng(45.159122342936286, 28.825300023890556),
+                radius: 51.0,
+              ),
+            );
+          }
+        } else if (radiusDeduct > 110 && radiusDeduct < 160) {
+          mCircle.add(
+            Circle(
+              strokeWidth: 1,
+              fillColor: Colors.white.withOpacity(0.4),
+              strokeColor: Colors.red,
+              circleId: const CircleId("id2"),
+              center: const LatLng(45.159122342936286, 28.825300023890556),
+              radius: 150.0 - (radiusDeduct - 60),
+            ),
+          );
+          setState(() {});
+          radiusDeduct++;
+          print(radiusDeduct - 60);
+          if (radiusDeduct >= 160) {
+            mCircle.add(
+              const Circle(
+                strokeWidth: 1,
+                strokeColor: Colors.black,
+                circleId: CircleId("id8"),
+                center: LatLng(45.159023993506196, 28.82563261778711),
+                radius: 21.0,
+              ),
+            );
+          }
+        } else if (radiusDeduct > 220 && radiusDeduct < 250) {
+          mCircle.add(
+            Circle(
+              strokeWidth: 1,
+              fillColor: Colors.white.withOpacity(0.4),
+              strokeColor: Colors.red,
+              circleId: const CircleId("id3"),
+              center: const LatLng(45.159023993506196, 28.82563261778711),
+              radius: 150.0 - (radiusDeduct - 120),
+            ),
+          );
+          setState(() {});
+          radiusDeduct++;
+          print(radiusDeduct - 120);
+          if (radiusDeduct >= 250) {
+            mCircle.add(
+              const Circle(
+                strokeWidth: 1,
+                strokeColor: Colors.black,
+                circleId: CircleId("id4"),
+                center: LatLng(45.15918002858243, 28.82555751593829),
+                radius: 2,
+              ),
+            );
+          }
+        } else if (radiusDeduct > 310 && radiusDeduct < 328) {
+          mCircle.add(
+            Circle(
+              strokeWidth: 1,
+              fillColor: Colors.white.withOpacity(0.4),
+              strokeColor: Colors.red,
+              circleId: const CircleId("id4"),
+              center: const LatLng(45.15918002858243, 28.82555751593829),
+              radius: 150.0 - (radiusDeduct - 180),
+            ),
+          );
+          setState(() {});
+          radiusDeduct++;
+          print(radiusDeduct - 180);
+        } else {
+          radiusDeduct++;
         }
-      setState(() {});
+      });
     });
   }
 
@@ -354,31 +477,31 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           selected = 1;
-                          setState(() {
-
-                          });
+                          setState(() {});
                           Navigator.pop(context);
                           killedByDialog(context: context);
                         },
                         child: Container(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          decoration:
-                              BoxDecoration(color: selected == 1 ? Colors.red : Colors.white, boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              offset: const Offset(0, 1),
-                              blurRadius: 2,
-                            ),
-                          ]),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 5),
+                          decoration: BoxDecoration(
+                              color: selected == 1 ? Colors.red : Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  offset: const Offset(0, 1),
+                                  blurRadius: 2,
+                                ),
+                              ]),
                           child: Text(
                             'Player 1',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              color: selected == 1 ? Colors.white : Colors.black
-                            ),
+                                color: selected == 1
+                                    ? Colors.white
+                                    : Colors.black),
                           ),
                         ),
                       ),
@@ -386,31 +509,31 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
                         height: 10,
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           selected = 2;
-                          setState(() {
-
-                          });
+                          setState(() {});
                           Navigator.pop(context);
                           killedByDialog(context: context);
                         },
                         child: Container(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          decoration:
-                              BoxDecoration(color: selected == 2 ? Colors.red : Colors.white, boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              offset: const Offset(0, 1),
-                              blurRadius: 2,
-                            ),
-                          ]),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 5),
+                          decoration: BoxDecoration(
+                              color: selected == 2 ? Colors.red : Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  offset: const Offset(0, 1),
+                                  blurRadius: 2,
+                                ),
+                              ]),
                           child: Text(
                             'Player 2',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                                color: selected == 2 ? Colors.white : Colors.black
-                            ),
+                                color: selected == 2
+                                    ? Colors.white
+                                    : Colors.black),
                           ),
                         ),
                       ),
@@ -418,55 +541,37 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
                         height: 10,
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           selected = 3;
-                          setState(() {
-
-                          });
+                          setState(() {});
                           Navigator.pop(context);
                           killedByDialog(context: context);
                         },
                         child: Container(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          decoration:
-                              BoxDecoration(color: selected == 3 ? Colors.red : Colors.white, boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              offset: const Offset(0, 1),
-                              blurRadius: 2,
-                            ),
-                          ]),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 5),
+                          decoration: BoxDecoration(
+                              color: selected == 3 ? Colors.red : Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  offset: const Offset(0, 1),
+                                  blurRadius: 2,
+                                ),
+                              ]),
                           child: Text(
                             'Player 3',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                                color: selected == 3 ? Colors.white : Colors.black
-                            ),
+                                color: selected == 3
+                                    ? Colors.white
+                                    : Colors.black),
                           ),
                         ),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     ],
                   ),
                   const SizedBox(
@@ -476,11 +581,11 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.pop(context);
-                          },
+                        },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           height: 50,
                           decoration: BoxDecoration(
                             color: Colors.orange.withOpacity(0.6),
@@ -498,11 +603,11 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           height: 50,
                           decoration: BoxDecoration(
                             color: Colors.orange.withOpacity(0.6),
@@ -524,7 +629,6 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-
                 ],
               ),
             ),
