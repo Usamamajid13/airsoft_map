@@ -1,7 +1,10 @@
+import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pubg_map/constants.dart';
+import 'package:pubg_map/map_values_class.dart';
+import 'dart:math';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({Key? key}) : super(key: key);
@@ -223,6 +226,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         EasyLoading.showError(
                             "Joining Code Already Exists. Please choose another joining code");
                       } else {
+                        Random random = new Random();
+                        int randomNumber = random.nextInt(4);
+                        print("Random" + randomNumber.toString());
                         EasyLoading.show(status: "Loading..");
                         print("hello");
                         await FirebaseFirestore.instance
@@ -236,7 +242,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                           'playerJoined': 1,
                         });
                         EasyLoading.showSuccess("Game created successfully!");
-                        Navigator.pushNamed(context, soldierMapScreenRoute);
+                        showDialogBox(context);
                       }
                       EasyLoading.dismiss();
                     }
@@ -298,5 +304,68 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       i = false;
     }
     return i;
+  }
+
+  showDialogBox(context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                    "Please wait for the players to join. \nStart the game when players have joined otherwise they will not be able to join the game."),
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    var mapValue = MapValues(
+                      timeOfCircle: timeOfCircle == '1 min'
+                          ? 1
+                          : timeOfCircle == '2 min'
+                              ? 2
+                              : timeOfCircle == '3 min'
+                                  ? 3
+                                  : timeOfCircle == '4 min'
+                                      ? 4
+                                      : 5,
+                      mapType: 1,
+                    );
+                    Navigator.pushNamed(context, soldierMapScreenRoute,
+                        arguments: mapValue);
+                  },
+                  child: Container(
+                    width: 250,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Center(
+                        child: Text(
+                      "Start Game",
+                      style: TextStyle(color: Colors.white),
+                    )),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

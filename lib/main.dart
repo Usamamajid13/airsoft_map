@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:pubg_map/map_values_class.dart';
 import 'constants.dart';
 import 'splash_screen.dart';
 import 'category_selection_page.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var mySystemTheme= SystemUiOverlayStyle.light
+    var mySystemTheme = SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: Colors.black);
     SystemChrome.setSystemUIOverlayStyle(mySystemTheme);
     return MaterialApp(
@@ -32,11 +33,15 @@ class MyApp extends StatelessWidget {
       initialRoute: splashRoute,
       routes: {
         splashRoute: (context) => const SplashScreen(),
-        categorySelectionScreenRoute: (context) => const CategorySelectionPage(),
+        categorySelectionScreenRoute: (context) =>
+            const CategorySelectionPage(),
         soldierHomeScreen: (context) => const SoldierHomeScreen(),
-        soldierMapScreenRoute: (context) => const SoldierMapScreen(),
+        soldierMapScreenRoute: (context) {
+          var i = ModalRoute.of(context)!.settings.arguments;
+          return SoldierMapScreen(i);
+        },
         adminHomeScreenRoute: (context) => const AdminHomeScreen(),
-       },
+      },
     );
   }
 }

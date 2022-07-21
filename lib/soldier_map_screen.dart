@@ -1,12 +1,15 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pubg_map/map_circles.dart';
+import 'package:pubg_map/map_values_class.dart';
 
 class SoldierMapScreen extends StatefulWidget {
-  const SoldierMapScreen({Key? key}) : super(key: key);
+  var screenData;
+  SoldierMapScreen(this.screenData, {Key? key}) : super(key: key);
 
   @override
   State<SoldierMapScreen> createState() => _SoldierMapScreenState();
@@ -15,52 +18,11 @@ class SoldierMapScreen extends StatefulWidget {
 class _SoldierMapScreenState extends State<SoldierMapScreen> {
   int selected = 0;
   var _initialCameraPosition;
-  Set<Circle> mCircle = {
-    // Circle(
-    //   strokeWidth: 1,
-    //   fillColor: Colors.white.withOpacity(0.4),
-    //   strokeColor: Colors.white,
-    //   circleId: const CircleId("id1"),
-    //   center: const LatLng(45.1589105131836, 28.825975940519047),
-    //   radius: 150,
-    // ),
-    // Circle(
-    //   strokeWidth: 1,
-    //   fillColor: Colors.white.withOpacity(0.4),
-    //   strokeColor: Colors.white,
-    //   circleId: const CircleId("id2"),
-    //   center: const LatLng(45.15894077462505, 28.82551460059801),
-    //   radius: 100,
-    // ),
-    // Circle(
-    //   strokeWidth: 1,
-    //   fillColor: Colors.white.withOpacity(0.4),
-    //   strokeColor: Colors.white,
-    //   circleId: const CircleId("id3"),
-    //   center: const LatLng(45.159122342936286, 28.825300023890556),
-    //   radius: 60,
-    // ),
-    // Circle(
-    //   strokeWidth: 1,
-    //   fillColor: Colors.white.withOpacity(0.4),
-    //   strokeColor: Colors.white,
-    //   circleId: const CircleId("id4"),
-    //   center: const LatLng(45.159023993506196, 28.82563261778711),
-    //   radius: 30,
-    // ),
-    // Circle(
-    //   strokeWidth: 1,
-    //   fillColor: Colors.white.withOpacity(0.4),
-    //   strokeColor: Colors.white,
-    //   circleId: const CircleId("id4"),
-    //   center: const LatLng(45.15918002858243, 28.82555751593829),
-    //   radius: 3,
-    // ),
-  };
+  Set<Circle> mCircle = {};
 
   initialCameraPosition() {
     _initialCameraPosition = CameraPosition(
-      target: const LatLng(45.16035546331, 28.824806522288824),
+      target: LatLng(circleOne[0], circleOne[1]),
       zoom: 16.5,
       bearing: position!.heading,
     );
@@ -83,6 +45,8 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
   int radiusDeduct = 0;
 
   getPosition() async {
+    print(widget.screenData.toString());
+    MapValues mapValues = MapValues.fromJson(widget.screenData);
     permission = await Geolocator.requestPermission();
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -93,12 +57,12 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
         fillColor: Colors.white.withOpacity(0.4),
         strokeColor: Colors.black,
         circleId: const CircleId("id1"),
-        center: const LatLng(45.15894077462505, 28.82551460059801),
+        center: LatLng(circleOne[2], circleOne[3]),
         radius: 150.0,
       ),
     );
-    Timer(Duration(minutes: 5), () {
-      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer(Duration(seconds: 5), () {
+      timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
         if (radiusDeduct < 50) {
           mCircle.add(
             Circle(
@@ -106,7 +70,7 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
               fillColor: Colors.white.withOpacity(0.4),
               strokeColor: Colors.red,
               circleId: const CircleId("id1"),
-              center: const LatLng(45.15894077462505, 28.82551460059801),
+              center: LatLng(circleOne[0], circleOne[1]),
               radius: 150.0 - radiusDeduct,
             ),
           );
@@ -115,11 +79,11 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
           print(radiusDeduct);
           if (radiusDeduct >= 50) {
             mCircle.add(
-              const Circle(
+              Circle(
                 strokeWidth: 1,
                 strokeColor: Colors.black,
-                circleId: CircleId("id9"),
-                center: LatLng(45.159122342936286, 28.825300023890556),
+                circleId: const CircleId("id2"),
+                center: LatLng(circleOne[2], circleOne[3]),
                 radius: 51.0,
               ),
             );
@@ -131,7 +95,7 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
               fillColor: Colors.white.withOpacity(0.4),
               strokeColor: Colors.red,
               circleId: const CircleId("id2"),
-              center: const LatLng(45.159122342936286, 28.825300023890556),
+              center: LatLng(circleOne[4], circleOne[5]),
               radius: 150.0 - (radiusDeduct - 60),
             ),
           );
@@ -140,11 +104,11 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
           print(radiusDeduct - 60);
           if (radiusDeduct >= 160) {
             mCircle.add(
-              const Circle(
+              Circle(
                 strokeWidth: 1,
                 strokeColor: Colors.black,
-                circleId: CircleId("id8"),
-                center: LatLng(45.159023993506196, 28.82563261778711),
+                circleId: const CircleId("id3"),
+                center: LatLng(circleOne[6], circleOne[7]),
                 radius: 21.0,
               ),
             );
@@ -156,7 +120,7 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
               fillColor: Colors.white.withOpacity(0.4),
               strokeColor: Colors.red,
               circleId: const CircleId("id3"),
-              center: const LatLng(45.159023993506196, 28.82563261778711),
+              center: LatLng(circleOne[8], circleOne[9]),
               radius: 150.0 - (radiusDeduct - 120),
             ),
           );
@@ -165,11 +129,11 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
           print(radiusDeduct - 120);
           if (radiusDeduct >= 250) {
             mCircle.add(
-              const Circle(
+              Circle(
                 strokeWidth: 1,
                 strokeColor: Colors.black,
                 circleId: CircleId("id4"),
-                center: LatLng(45.15918002858243, 28.82555751593829),
+                center: LatLng(circleOne[10], circleOne[11]),
                 radius: 2,
               ),
             );
@@ -181,7 +145,7 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
               fillColor: Colors.white.withOpacity(0.4),
               strokeColor: Colors.red,
               circleId: const CircleId("id4"),
-              center: const LatLng(45.15918002858243, 28.82555751593829),
+              center: LatLng(circleOne[10], circleOne[11]),
               radius: 150.0 - (radiusDeduct - 180),
             ),
           );
@@ -198,7 +162,6 @@ class _SoldierMapScreenState extends State<SoldierMapScreen> {
   @override
   void initState() {
     getPosition();
-
     super.initState();
   }
 
